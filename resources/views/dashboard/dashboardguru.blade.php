@@ -15,8 +15,8 @@
 
 <div style="display:flex;">    
     <main style="flex:1; padding:20px;">
-        <h2>Dashboard Guru</h2>
-
+        <h2>Dashboard Gurau</h2>
+{{-- lalalal --}}
         <table border="1">
             <tr>
                 <td>Data Siswa</td>
