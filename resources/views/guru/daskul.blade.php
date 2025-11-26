@@ -25,7 +25,6 @@
             <th>Jadwal Eskul</th>
             <th>Materi</th>
             <th>Pembina Eskul</th>
-            <th>Terdaftar (Diterima)</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -37,17 +36,6 @@
             <td>{{ $eskul->jadwal_eskul ?? '-' }}</td>
             <td>{{ Str::limit($eskul->materi ?? '-', 80) }}</td>
             <td>{{ $eskul->pembina->nama_pembina ?? 'N/A' }}</td>
-            <td>
-                @if($eskul->pendaftaran->isNotEmpty())
-                    <ul style="margin:0;padding-left:16px;">
-                        @foreach($eskul->pendaftaran as $p)
-                            <li>{{ $p->siswa->nama_siswa ?? '-' }} ({{ optional($p->siswa)->kelas ?? '-' }})</li>
-                        @endforeach
-                    </ul>
-                @else
-                    -
-                @endif
-            </td>
             <td>
                 <a href="{{ route('eskul.edit', $eskul->id_eskul) }}">Edit</a>
                 <form action="{{ route('eskul.destroy', $eskul->id_eskul) }}" method="POST" style="display:inline;">

@@ -30,7 +30,9 @@ class PendaftaranController extends Controller
         }
 
         // Jika guru/pembina, tampilkan semua data pendaftaran
-        $pendaftarans = Pendaftaran::with(['siswa', 'eskul'])->get();
+        $pendaftarans = Pendaftaran::with(['siswa', 'eskul'])
+            ->orderBy('tanggal_daftar', 'desc')
+            ->get();
         return view('pembina.dapen', compact('pendaftarans'));
     }
 

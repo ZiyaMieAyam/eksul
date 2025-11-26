@@ -187,9 +187,11 @@ class GuruController extends Controller
 
     public function prestasiVerifikasi()
     {
+        // Ambil hanya prestasi yang belum diverifikasi (status = Pending)
         $prestasis = Prestasi::with(['siswa', 'eskul'])
             ->where('status', 'Pending')
             ->get();
+
         return view('guru.veripres', compact('prestasis'));
     }
 
