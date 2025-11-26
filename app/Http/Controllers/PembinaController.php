@@ -53,7 +53,7 @@ class PembinaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_user' => 'required|integer|exists:userss,id_user', // fix here
+            'id_user' => 'integer|exists:userss,id_user', // fix here
             'nama_pembina' => 'required|string|max:50',
         ]);
 
