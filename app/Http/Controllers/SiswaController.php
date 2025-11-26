@@ -29,7 +29,7 @@ class SiswaController extends Controller
         return view('dashboard.dashboardsiswa', compact('siswa', 'prestasis'));
     }
 
-    /**
+    /**git
      * Display a listing of the resource.
      */
     public function index()
