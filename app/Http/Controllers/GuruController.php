@@ -195,11 +195,20 @@ class GuruController extends Controller
         return view('guru.veripres', compact('prestasis'));
     }
 
+    /**
+     * Update status prestasi (verifikasi oleh guru).
+     */
     public function prestasiUpdate(Request $request, $id)
     {
+        $validated = $request->validate([
+            'status' => 'required|in:Diverifikasi,Ditolak',
+        ]);
+
         $prestasi = Prestasi::findOrFail($id);
-        $prestasi->update(['status' => $request->status]);
-        return redirect()->route('guru.prestasi.verifikasi')->with('success', 'Prestasi berhasil diverifikasi');
+        $prestasi->status = $validated['status'];
+        $prestasi->save();
+
+        return redirect()->back()->with('success', 'Status prestasi berhasil diperbarui.');
     }
 
     // PEMBINA CRUD - TAMPIM (Tambah Pembina)

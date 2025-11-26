@@ -22,8 +22,8 @@
             <td>{{ $p->user->username ?? '-' }}</td>
             <td>{{ $p->nama_pembina }}</td>
             <td>
-                <a href="{{ route('pembina.edit', $p->id_pembina) }}" class="btn btn-warning btn-sm">Edit</a>
-                <form action="{{ route('pembina.destroy', $p->id_pembina) }}" method="POST" style="display:inline;">
+                <a href="{{ route('guru.edpim', $p->id_pembina) }}" class="btn btn-warning btn-sm">Edit</a>
+                <form action="{{ route('guru.destroyim', $p->id_pembina) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>

@@ -18,8 +18,14 @@ class SiswaController extends Controller
         if (!$siswa) {
             // Redirect ke halaman error atau tampilkan pesan
             return redirect()->route('logout')->withErrors('Akun Anda belum terdaftar sebagai siswa.');
-        }   
-        $prestasis = Prestasi::where('id_siswa', $siswa->id_siswa)->get();
+        }
+
+        // Tampilkan hanya prestasi yang sudah Diverifikasi
+        $prestasis = Prestasi::with('eskul')
+            ->where('id_siswa', $siswa->id_siswa)   
+            ->where('status', 'Diverifikasi')
+            ->get();
+
         return view('dashboard.dashboardsiswa', compact('siswa', 'prestasis'));
     }
 

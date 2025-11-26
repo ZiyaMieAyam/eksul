@@ -7,7 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-{{-- ...existing code... --}}
 @extends('layouts.app')
 
 @section('title', 'Data Ekstrakurikuler')
@@ -17,7 +16,7 @@
 
 <a href="{{ route('eskul.create') }}">+ Tambah Eskul</a>
 
-<table border="1" cellpadding="8" class="table-border">
+<table border="1" cellpadding="8">
     <thead>
         <tr>
             <th>No</th>
@@ -54,6 +53,5 @@
 </table>
 
 @endsection
-{{-- ...existing code... --}}
 </body>
 </html>
