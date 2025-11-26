@@ -8,7 +8,12 @@
 <body>
 
     <div class="container">
-        <h1>Edit Data Aktivitas</h1>
+        @extends('layouts.app')
+
+        @section('title', 'Edit Data Aktivitas')
+
+        @section('content')
+        <h2>Edit Data Aktivitas</h2>
 
         @if($errors->any())
             <div style="color:red; background:#ffebee; padding:10px; margin-bottom:10px;">
@@ -24,42 +29,33 @@
             @csrf
             @method('PUT')
 
-            <label for="id_pembina">Pembina</label><br>
-            <select name="id_pembina" id="id_pembina" required>
-                <option value="">-- Pilih Pembina --</option>
-                @foreach($pembinas as $pembina)
-                    <option value="{{ $pembina->id_pembina }}" {{ $aktivitas->id_pembina == $pembina->id_pembina ? 'selected' : '' }}>
-                        {{ $pembina->nama_pembina }}
-                    </option>
-                @endforeach
-            </select><br><br>
+            <!-- Hidden fields untuk ID -->
+            <input type="hidden" name="id_pembina" value="{{ $aktivitas->id_pembina }}">
+            <input type="hidden" name="id_eskul" value="{{ $aktivitas->id_eskul }}">
 
-            <label for="id_eskul">Eskul</label><br>
-            <select name="id_eskul" id="id_eskul" required>
-                <option value="">-- Pilih Eskul --</option>
-                @foreach($eskuls as $eskul)
-                    <option value="{{ $eskul->id_eskul }}" {{ $aktivitas->id_eskul == $eskul->id_eskul ? 'selected' : '' }}>
-                        {{ $eskul->nama_eskul }}
-                    </option>
-                @endforeach
-            </select><br><br>
+            <label for="pembina">Pembina</label><br>
+            <input type="text" id="pembina" value="{{ $aktivitas->pembina->nama_pembina ?? '-' }}" disabled><br><br>
 
-            <label for="tanggal_aktivitas">Tanggal</label><br>
-            <input type="date" name="tanggal_aktivitas" id="tanggal_aktivitas" value="{{ $aktivitas->tanggal_aktivitaszz }}" required><br><br>
+            <label for="eskul">Eskul</label><br>
+            <input type="text" id="eskul" value="{{ $aktivitas->eskul->nama_eskul ?? '-' }}" disabled><br><br>
 
-            <label for="jam">Jam</label><br>
-            <input type="time" name="jam" id="jam" value="{{ $aktivitas->jam }}"><br><br>
+            <label for="tanggal">Tanggal</label><br>
+            <input type="date" name="tanggal" id="tanggal" value="{{ old('tanggal', $aktivitas->tanggal) }}" required><br><br>
+
+            <label for="jam">Jam (HH:MM)</label><br>
+            <input type="text" name="jam" id="jam" placeholder="10:40" value="{{ old('jam', $aktivitas->jam) }}" required><br><br>
 
             <label for="jenis_aktivitas">Jenis Aktivitas</label><br>
-            <input type="text" name="jenis_aktivitas" id="jenis_aktivitas" value="{{ $aktivitas->jenis_aktivitas }}" required><br><br>
+            <input type="text" name="jenis_aktivitas" id="jenis_aktivitas" value="{{ old('jenis_aktivitas', $aktivitas->jenis_aktivitas) }}" required><br><br>
 
             <label for="tempat">Tempat</label><br>
-            <input type="text" name="tempat" id="tempat" value="{{ $aktivitas->tempat }}"><br><br>
+            <input type="text" name="tempat" id="tempat" value="{{ old('tempat', $aktivitas->tempat) }}" required><br><br>
 
             <button type="submit">Perbarui</button>
         </form>
 
-        <a href="{{ route('aktivitas.index') }}">← Kembali ke Daftar Aktivitas</a>
+        <p><a href="{{ route('aktivitas.index') }}">← Kembali ke Daftar Aktivitas</a></p>
+        @endsection
     </div>
 
 </body>

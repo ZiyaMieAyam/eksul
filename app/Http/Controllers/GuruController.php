@@ -6,102 +6,67 @@ use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\Eskul;
 use App\Models\Siswa;
+use App\Models\Pembina;
+use App\Models\User;
 use App\Models\Pendaftaran;
 use App\Models\Kehadiran;
 use App\Models\Prestasi;
 
 class GuruController extends Controller
 {
-    // dashboard guru
     public function dashboard()
     {
-        // Total SEMUA siswa dari tabel siswas (tanpa filter apapun)
         $totalSiswa = Siswa::count();
-
-        // Statistik semua eskul dengan jumlah pendaftar
         $eskulStats = Eskul::withCount('pendaftaran')->get();
-
-        return view('dashboard.dashboardguru', compact(
-            'totalSiswa',
-            'eskulStats'
-        ));
+        return view('dashboard.dashboardguru', compact('totalSiswa', 'eskulStats'));
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $data = Siswa::all();
         return view('guru.dasis', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('guru.tamsis');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_user' => 'required|integer|exists:userss,id_user',
-            'nama_guru' => 'required|string|max:50',
             'jabatan' => 'required|string|max:25',
         ]);
-
         Guru::create($validated);
         return redirect()->route('guru.index')->with('success', 'Guru berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $guru = Guru::with('user')->findOrFail($id);
         return view('guru.show', compact('guru'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $data = Siswa::findOrFail($id);
         return view('guru.edsis', compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'id_user' => 'required|integer|exists:userss,id_user',
-            'nama_guru' => 'required|string|max:50',
             'jabatan' => 'required|string|max:25',
         ]);
-
         $guru = Guru::findOrFail($id);
         $guru->update($validated);
-
         return redirect()->route('guru.index')->with('success', 'Guru berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $guru = Guru::findOrFail($id);
         $guru->delete();
-
         return redirect()->route('guru.index')->with('success', 'Guru berhasil dihapus.');
     }
 
@@ -113,63 +78,82 @@ class GuruController extends Controller
 
     public function absensiDetail($id_eskul)
     {
-        $eskul = \App\Models\Eskul::findOrFail($id_eskul);
-        $kehadirans = \App\Models\Kehadiran::with('siswa')
+        $eskul = Eskul::findOrFail($id_eskul);
+        $kehadirans = Kehadiran::with('siswa')
             ->where('id_eskul', $id_eskul)
-            ->orderBy('tanggal', 'desc')
-            ->get()
-            ->groupBy('tanggal');
-        return view('guru.absis', compact('eskul', 'kehadirans')); 
+            ->groupBy('tanggal')
+            ->get();
+        return view('guru.absis', compact('eskul', 'kehadirans'));
     }
 
     public function dapim()
     {
-        $pembinas = \App\Models\Pembina::with('user')->get();
+        $pembinas = Pembina::with('user')->get();
         return view('guru.dapim', compact('pembinas'));
     }
 
     public function dasis()
     {
-        $data = Siswa::with(['user', 'eskul'])->get(); // Tambahkan with('eskul')
+        // eager-load pendaftarans + eskul
+        $data = Siswa::with(['user', 'pendaftarans.eskul'])->get();
         return view('guru.dasis', compact('data'));
     }
 
     public function tamsis()
     {
-        return view('guru.tamsis');
+        $users = User::where('role', 'siswa')->get();
+        $eskuls = Eskul::all();
+        return view('guru.tamsis', compact('users', 'eskuls'));
     }
 
     public function storesis(Request $request)
     {
         $request->validate([
+            'id_user'    => 'nullable|integer|exists:userss,id_user',
             'nama_siswa' => 'required|string|max:100',
             'kelas'      => 'required|string|max:50',
             'alamat'     => 'nullable|string',
+            'id_eskul'   => 'nullable|integer|exists:eskuls,id_eskul',
         ]);
 
-        Siswa::create([
+        $siswa = Siswa::create([
             'id_user'    => $request->input('id_user'),
             'nama_siswa' => $request->input('nama_siswa'),
             'kelas'      => $request->input('kelas'),
             'alamat'     => $request->input('alamat'),
         ]);
 
+        // jika dipilih eskul, buat pendaftaran langsung sebagai Diterima
+        if ($request->filled('id_eskul')) {
+            Pendaftaran::create([
+                'id_siswa' => $siswa->id_siswa,
+                'id_eskul' => $request->input('id_eskul'),
+                'tanggal_daftar' => now()->toDateString(),
+                'status' => 'Diterima',
+            ]);
+        }
+
         return redirect()->route('siswa.index')->with('success', 'Siswa berhasil disimpan.');
     }
 
     public function edsis($id)
     {
-        $data = Siswa::findOrFail($id);
-        return view('guru.edsis', compact('data'));
+        $data = Siswa::with('pendaftarans')->findOrFail($id);
+        $eskuls = Eskul::all();
+        // ambil eskul yang berstatus Diterima jika ada
+        $selectedEskul = $data->pendaftarans->where('status', 'Diterima')->first();
+        $selectedEskulId = $selectedEskul->id_eskul ?? null;
+        return view('guru.edsis', compact('data', 'eskuls', 'selectedEskulId'));
     }
 
     public function updatesis(Request $request, $id)
     {
         $request->validate([
-            'id_user'    => 'nullable|integer',
+            'id_user'    => 'nullable|integer|exists:userss,id_user',
             'nama_siswa' => 'required|string|max:100',
             'kelas'      => 'required|string|max:50',
             'alamat'     => 'nullable|string',
+            'id_eskul'   => 'nullable|integer|exists:eskuls,id_eskul',
         ]);
 
         Siswa::where('id_siswa', $id)->update([
@@ -179,6 +163,18 @@ class GuruController extends Controller
             'alamat'     => $request->input('alamat'),
         ]);
 
+        // update/assign eskul: hapus/ubah pendaftaran lama atau buat baru
+        if ($request->filled('id_eskul')) {
+            Pendaftaran::updateOrCreate(
+                ['id_siswa' => $id],
+                [
+                    'id_eskul' => $request->input('id_eskul'),
+                    'tanggal_daftar' => now()->toDateString(),
+                    'status' => 'Diterima'
+                ]
+            );
+        }
+
         return redirect()->route('siswa.index')->with('success', 'Siswa berhasil diperbarui.');
     }
 
@@ -186,7 +182,6 @@ class GuruController extends Controller
     {
         $siswa = Siswa::findOrFail($id);
         $siswa->delete();
-
         return redirect()->route('siswa.index')->with('success', 'Siswa berhasil dihapus.');
     }
 
@@ -194,7 +189,6 @@ class GuruController extends Controller
     {
         $prestasis = Prestasi::with(['siswa', 'eskul'])
             ->where('status', 'Pending')
-            ->orderBy('created_at', 'desc')
             ->get();
         return view('guru.veripres', compact('prestasis'));
     }
@@ -203,8 +197,54 @@ class GuruController extends Controller
     {
         $prestasi = Prestasi::findOrFail($id);
         $prestasi->update(['status' => $request->status]);
-        
-        return redirect()->route('guru.prestasi.verifikasi')
-            ->with('success', 'Prestasi berhasil diverifikasi.');
+        return redirect()->route('guru.prestasi.verifikasi')->with('success', 'Prestasi berhasil diverifikasi');
+    }
+
+    // PEMBINA CRUD - TAMPIM (Tambah Pembina)
+    public function tampim()
+    {
+        $users = User::where('role', 'pembina')->get();
+        return view('guru.tampim', compact('users'));
+    }
+
+    // PEMBINA CRUD - STOREIM (Simpan Pembina)
+    public function storeim(Request $request)
+    {
+        $validated = $request->validate([
+            'id_user' => 'required|integer|exists:userss,id_user',
+            'nama_pembina' => 'required|string|max:50',
+        ]);
+
+        Pembina::create($validated);
+        return redirect()->route('guru.dapim')->with('success', 'Pembina berhasil ditambah');
+    }
+
+    // PEMBINA CRUD - EDPIM (Edit Pembina)
+    public function edpim($id)
+    {
+        $pembina = Pembina::findOrFail($id);
+        $users = User::where('role', 'pembina')->get();
+        return view('guru.edpim', compact('pembina', 'users'));
+    }
+
+    // PEMBINA CRUD - UPDATEIM (Update Pembina)
+    public function updateim(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'id_user' => 'required|integer|exists:userss,id_user',
+            'nama_pembina' => 'required|string|max:50',
+        ]);
+
+        $pembina = Pembina::findOrFail($id);
+        $pembina->update($validated);
+        return redirect()->route('guru.dapim')->with('success', 'Pembina berhasil diupdate');
+    }
+
+    // PEMBINA CRUD - DESTROYIM (Hapus Pembina)
+    public function destroyim($id)
+    {
+        $pembina = Pembina::findOrFail($id);
+        $pembina->delete();
+        return redirect()->route('guru.dapim')->with('success', 'Pembina berhasil dihapus');
     }
 }

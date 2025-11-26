@@ -40,7 +40,7 @@ class PendaftaranController extends Controller
     public function create()
     {
         $siswa = auth()->user()->siswa;
-        $eskuls = \App\Models\Eskul::all();
+        $eskuls = Eskul::all();
         return view('siswa.dafes', compact('siswa', 'eskuls'));
     }
 
@@ -53,7 +53,7 @@ class PendaftaranController extends Controller
             'id_eskul' => 'required|exists:eskuls,id_eskul',
         ]);
         $siswa = auth()->user()->siswa;
-        \App\Models\Pendaftaran::create([
+        Pendaftaran::create([
             'id_siswa' => $siswa->id_siswa,
             'id_eskul' => $request->id_eskul,
             'tanggal_daftar' => now(),

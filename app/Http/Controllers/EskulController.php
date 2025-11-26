@@ -10,8 +10,12 @@ class EskulController extends Controller
 {
     public function index()
     {
-        // eager load pembina
-        $data = Eskul::with('pembina')->get();
+        // ambil semua eskul + pembina + pendaftarans yang sudah diterima beserta data siswa
+        $data = Eskul::with([
+            'pembina',
+            'pendaftaran' => fn($q) => $q->where('status', 'Diterima')->with('siswa')
+        ])->get();
+
         return view('guru.daskul', compact('data'));
     }  
 

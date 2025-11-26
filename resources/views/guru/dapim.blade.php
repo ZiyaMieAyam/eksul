@@ -10,7 +10,7 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>Username</th>
+            <th>Nip</th>
             <th>Nama Pembina</th>
             <th>Aksi</th>
         </tr>
@@ -24,7 +24,7 @@
             <td>
                 <a href="{{ route('pembina.edit', $p->id_pembina) }}" class="btn btn-warning btn-sm">Edit</a>
                 <form action="{{ route('pembina.destroy', $p->id_pembina) }}" method="POST" style="display:inline;">
-                    @csrfz
+                    @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>
                 </form>

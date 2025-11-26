@@ -11,27 +11,17 @@ use App\Http\Controllers\PrestasiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\Auth\AuthController;
 
-// redirect root ke login
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/', fn() => redirect()->route('login'));
 
-// Auth routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-// Untuk menghindari error GET /logout
-Route::get('/logout', function() {
-    return redirect()->route('login');
-});
 
 Route::middleware(['auth'])->group(function () {
-    // Dashboard
     Route::get('/dashboard/siswa', [SiswaController::class, 'dashboard'])->name('dashboard.siswa');
     Route::get('/dashboard/guru', [GuruController::class, 'dashboard'])->name('dashboard.guru');
     Route::get('/dashboard/pembina', [PembinaController::class, 'dashboard'])->name('dashboard.pembina');
 
-    // CRUD Resource
     Route::resource('siswa', SiswaController::class);
     Route::resource('guru', GuruController::class);
     Route::resource('pembina', PembinaController::class);
@@ -40,7 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('kehadiran', KehadiranController::class);
     Route::resource('prestasi', PrestasiController::class);
     Route::resource('pendaftaran', PendaftaranController::class);
-    // Custom routes (yang tidak ada di resource)
+
     Route::get('/dafes', [PendaftaranController::class, 'create'])->name('dafes');
     Route::post('/dafes', [PendaftaranController::class, 'store'])->name('dafes.store');
     Route::get('/prosis', [SiswaController::class, 'profil'])->name('prosis');
@@ -50,18 +40,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/absensi-guru', [GuruController::class, 'absensi'])->name('guru.absensi');
     Route::get('/data-pembina-guru', [GuruController::class, 'dapim'])->name('guru.dapim');
     
-    // Route siswa guru (non-resource)
+    // GURU routes untuk siswa
     Route::get('/siswa/create', [GuruController::class, 'tamsis'])->name('guru.tamsis');
     Route::post('/siswa-store', [GuruController::class, 'storesis'])->name('guru.storesis');
     Route::get('/siswa/{id}/edit', [GuruController::class, 'edsis'])->name('guru.edsis');
     Route::put('/siswa/{id}', [GuruController::class, 'updatesis'])->name('guru.updatesis');
     Route::delete('/siswa/{id}', [GuruController::class, 'destroyis'])->name('guru.dsis');
 
-    // Prestasi - PEMBINA lihat & kelola
+    // GURU routes untuk pembina (PENTING!)
+    Route::get('/guru/pembina/tambah', [GuruController::class, 'tampim'])->name('guru.tampim');
+    Route::post('/guru/pembina/simpan', [GuruController::class, 'storeim'])->name('guru.storeim');
+    Route::get('/guru/pembina/{id}/edit', [GuruController::class, 'edpim'])->name('guru.edpim');
+    Route::put('/guru/pembina/{id}', [GuruController::class, 'updateim'])->name('guru.updateim');
+    Route::delete('/guru/pembina/{id}', [GuruController::class, 'destroyim'])->name('guru.destroyim');
+
     Route::get('/prestasi-pembina', [PembinaController::class, 'prestasiIndex'])->name('pembina.prestasi.index');
     Route::put('/prestasi/{id}/pembina', [PembinaController::class, 'prestasiUpdate'])->name('pembina.prestasi.update');
-
-    // Prestasi - GURU verifikasi
     Route::get('/prestasi-verifikasi', [GuruController::class, 'prestasiVerifikasi'])->name('guru.prestasi.verifikasi');
     Route::put('/prestasi/{id}/verifikasi', [GuruController::class, 'prestasiUpdate'])->name('guru.prestasi.update');
 });
