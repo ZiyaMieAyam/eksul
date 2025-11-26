@@ -3,59 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Aktivitas</title>
+    <title>Edit Data Aktivitas</title>
+    {{-- Memuat Tailwind CSS --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Gaya kustom untuk warna form */
+        .form-bg {
+            background-color: #a00b14; /* Merah gelap untuk kotak form */
+        }
+        .input-style {
+            /* Gaya input untuk input dan select */
+            border-radius: 4px;
+            padding: 8px 12px;
+            width: 100%;
+            background-color: white; 
+            color: black;
+            border: 1px solid #ccc;
+        }
+        .input-disabled {
+            /* Gaya khusus untuk input yang dinonaktifkan */
+            background-color: #f0f0f0; 
+            color: #555;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
     <div class="container">
-        @extends('layouts.app')
+        <h1>Edit Data Aktivitas</h1>
 
-        @section('title', 'Edit Data Aktivitas')
+            @if($errors->any())
+                <div class="bg-red-300 p-3 mb-4 rounded border border-red-400 text-red-900 font-semibold">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            
+            <form action="{{ route('aktivitas.update', $aktivitas->id_aktivitas) }}" method="POST">
+                @csrf
+                @method('PUT')
 
-        @section('content')
-        <h2>Edit Data Aktivitas</h2>
+            <label for="id_pembina">Pembina</label><br>
+            <select name="id_pembina" id="id_pembina" required>
+                <option value="">-- Pilih Pembina --</option>
+                @foreach($pembinas as $pembina)
+                    <option value="{{ $pembina->id_pembina }}" {{ $aktivitas->id_pembina == $pembina->id_pembina ? 'selected' : '' }}>
+                        {{ $pembina->nama_pembina }}
+                    </option>
+                @endforeach
+            </select><br><br>
 
-        @if($errors->any())
-            <div style="color:red; background:#ffebee; padding:10px; margin-bottom:10px;">
-                <ul>
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+            <label for="id_eskul">Eskul</label><br>
+            <select name="id_eskul" id="id_eskul" required>
+                <option value="">-- Pilih Eskul --</option>
+                @foreach($eskuls as $eskul)
+                    <option value="{{ $eskul->id_eskul }}" {{ $aktivitas->id_eskul == $eskul->id_eskul ? 'selected' : '' }}>
+                        {{ $eskul->nama_eskul }}
+                    </option>
+                @endforeach
+            </select><br><br>
 
-        <form action="{{ route('aktivitas.update', $aktivitas->id_aktivitas) }}" method="POST">
-            @csrf
-            @method('PUT')
+            <label for="tanggal_aktivitas">Tanggal</label><br>
+            <input type="date" name="tanggal_aktivitas" id="tanggal_aktivitas" value="{{ $aktivitas->tanggal_aktivitaszz }}" required><br><br>
 
-            <!-- Hidden fields untuk ID -->
-            <input type="hidden" name="id_pembina" value="{{ $aktivitas->id_pembina }}">
-            <input type="hidden" name="id_eskul" value="{{ $aktivitas->id_eskul }}">
-
-            <label for="pembina">Pembina</label><br>
-            <input type="text" id="pembina" value="{{ $aktivitas->pembina->nama_pembina ?? '-' }}" disabled><br><br>
-
-            <label for="eskul">Eskul</label><br>
-            <input type="text" id="eskul" value="{{ $aktivitas->eskul->nama_eskul ?? '-' }}" disabled><br><br>
-
-            <label for="tanggal">Tanggal</label><br>
-            <input type="date" name="tanggal" id="tanggal" value="{{ old('tanggal', $aktivitas->tanggal) }}" required><br><br>
-
-            <label for="jam">Jam (HH:MM)</label><br>
-            <input type="text" name="jam" id="jam" placeholder="10:40" value="{{ old('jam', $aktivitas->jam) }}" required><br><br>
+            <label for="jam">Jam</label><br>
+            <input type="time" name="jam" id="jam" value="{{ $aktivitas->jam }}"><br><br>
 
             <label for="jenis_aktivitas">Jenis Aktivitas</label><br>
-            <input type="text" name="jenis_aktivitas" id="jenis_aktivitas" value="{{ old('jenis_aktivitas', $aktivitas->jenis_aktivitas) }}" required><br><br>
+            <input type="text" name="jenis_aktivitas" id="jenis_aktivitas" value="{{ $aktivitas->jenis_aktivitas }}" required><br><br>
 
             <label for="tempat">Tempat</label><br>
-            <input type="text" name="tempat" id="tempat" value="{{ old('tempat', $aktivitas->tempat) }}" required><br><br>
+            <input type="text" name="tempat" id="tempat" value="{{ $aktivitas->tempat }}"><br><br>
 
             <button type="submit">Perbarui</button>
         </form>
 
-        <p><a href="{{ route('aktivitas.index') }}">← Kembali ke Daftar Aktivitas</a></p>
-        @endsection
+        <a href="{{ route('aktivitas.index') }}">← Kembali ke Daftar Aktivitas</a>
     </div>
 
 </body>

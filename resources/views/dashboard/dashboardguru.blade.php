@@ -10,7 +10,6 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard Guru')
-
 @section('content')
 
 <div style="display:flex;">    

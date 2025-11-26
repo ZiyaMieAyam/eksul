@@ -29,7 +29,7 @@ class GuruController extends Controller
 
     public function create()
     {
-        return view('guru.tamsis');
+        return view('guru.tampim');
     }
 
     public function store(Request $request)
