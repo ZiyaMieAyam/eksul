@@ -22,7 +22,6 @@
             <th>Tanggal Diraih</th>
             <th>Tingkat</th>
             <th>Status</th>
-            <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -35,13 +34,6 @@
             <td>{{ $p->tanggal_diraih }}</td>
             <td>{{ $p->tingkat }}</td>
             <td>{{ $p->status }}</td>
-            <td>
-                <a href="{{ route('prestasi.edit', $p->id_prestasi) }}">Edit</a>
-                <form action="{{ route('prestasi.destroy', $p->id_prestasi) }}" method="POST" style="display:inline;">
-                    @csrf @method('DELETE')
-                    <button onclick="return confirm('Hapus?')">Hapus</button>
-                </form>
-            </td>
         </tr>
         @empty
         <tr>
