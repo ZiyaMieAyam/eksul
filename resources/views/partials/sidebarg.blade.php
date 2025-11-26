@@ -1,12 +1,12 @@
-<aside class="sidebar sidebarg">
+<aside class="sidebar sidebarg ">
     <div class="heading">
-        <div class="icon">🎓</div>
+        <div class="icon " >🎓</div>
         <h3>Guru / Admin</h3>
     </div>
 
     <nav>
         <a href="{{ route('dashboard.guru') }}" 
-           class="{{ request()->routeIs('dashboard.guru') ? 'active' : '' }}">
+           class="{{ request()->routeIs('dashboard.guru') ? 'active' : '' }}" >
            Dashboard
         </a>
 

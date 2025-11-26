@@ -26,7 +26,7 @@
             <td>{{ $siswa->eskul->nama_eskul ?? '-' }}</td>
             <td>
                 <a href="{{ route('guru.edsis', $siswa->id_siswa) }}" class="btn btn-warning btn-sm">Edit</a>
-                <form action="{{ route('guru.dsis', $siswa->id_siswa) }}" method="POST" style="display:inline;">
+                <form action="{{ route('guru.edsis', $siswa->id_siswa) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>
