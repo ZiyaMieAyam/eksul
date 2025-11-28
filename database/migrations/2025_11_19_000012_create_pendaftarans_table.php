@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('pendaftarans', function (Blueprint $table) {
             $table->id("id_pendaftaran")->unique();
-            $table->usnignedBigInteger('id_siswa');
-            $table->usnignedBigInteger('id_eskul');
+            $table->unsignedBigInteger('id_siswa');
+            $table->unsignedBigInteger('id_eskul');
             $table->date('tanggal_daftar');
-            $table->enum('status', ['Pending', 'Diterima', 'Ditolak'])->default('pending');
+            $table->enum('status', ['Pending', 'Diterima', 'Ditolak'])->default('Pending');
             $table->timestamps();
         });
     }

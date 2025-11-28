@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('nama_prestasi', 100);
             $table->date('tanggal_diraih');
             $table->string('tingkat', 50);
-            $table->string('bukti', 100);
-            $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('peding');
+            $table->string('bukti', 100)->nullable();
+            $table->enum('status', ['Pending', 'Diverifikasi', 'Ditolak'])->default('Pending');
             $table->timestamps();
         });
     }

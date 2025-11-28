@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('userss', function (Blueprint $table) {
             $table->id('id_user');
-            $table->unsignedBigInteger('id_siswa');
-            $table->unsignedBigInteger('id_guru');
-            $table->unsignedBigInteger('id_pembina');
+            $table->unsignedBigInteger('id_siswa')->nullable();
+            $table->unsignedBigInteger('id_guru')->nullable();
+            $table->unsignedBigInteger('id_pembina')->nullable();
             $table->string('username')->unique();
             $table->string('password');
             $table->enum('role', ['siswa', 'guru', 'pembina']);
