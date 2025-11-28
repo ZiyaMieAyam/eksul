@@ -136,7 +136,6 @@
             <div class="eskul-card">
                 <div class="icon-container">
                     <img src="{{ asset('images/eskul/' . $eskul->id . '.png') }}" alt="{{ $eskul->nama_eskul }}">
-                    <img src="{{ asset('images/eskul/' . $eskul->id . '.webp') }}" alt="{{ $eskul->nama_eskul }}">
                 </div>
                 <div class="nama">{{ strtoupper($eskul->nama_eskul) }}</div>
                 <div class="count">{{ $eskul->pendaftaran_count ?? 0 }} Siswa</div>
