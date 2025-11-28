@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -21,28 +23,31 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
         $credentials = $request->only('username', 'password');
+        $user = User::where('username', $request->username)->first();
+        if ($user && Hash::check ($credentials['password'], $user->password)) {
+            Auth::login($user);
 
-        // Auth::attempt otomatis pakai provider dari config/auth.php (userss)
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            // Redirect sesuai role
-            $role = Auth::user()->role;
-            if ($role === 'siswa') {
-                return redirect()->route('dashboard.siswa')->with('success', 'ANDA BERHASIL LOGIN');
-            } elseif ($role === 'guru') {
-                return redirect()->route('dashboard.guru')->with('success', 'ANDA BERHASIL LOGIN');
-            } elseif ($role === 'pembina') {
-                return redirect()->route('dashboard.pembina')->with('success', 'ANDA BERHASIL LOGIN');
+            
+            if ($user->role === 'guru') {
+                return redirect()->route('dashboard.guru');
+            } elseif ($user->role === 'siswa') {
+                return redirect()->route('dashboard.siswa');
+            } elseif ($user->role === 'pembina') {
+                return redirect()->route('dashboard.pembina');
             } else {
-                Auth::logout();
-                return redirect()->route('login')->withErrors(['username' => 'Role tidak dikenali.']);
+                return redirect()->route('login')->withErrors('Role tidak dikenali.');
             }
         }
 
-        return back()->withErrors(['username' => 'Username atau password salah'])->withInput();
+        return back()->withErrors('Login gagal. Periksa username dan password Anda.');
     }
+
 
     /**
      * Logout user.

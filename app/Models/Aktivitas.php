@@ -9,8 +9,9 @@ use App\Models\Eskul;
 class Aktivitas extends Model
 {
     protected $table = 'aktivitass';
-    protected $primaryKey = 'id_aktivitas';
+    public $inceretmenting = true;
     protected $keyType = 'int';
+    protected $primaryKey = 'id_aktivitas';
 
     protected $fillable = [
         'id_pembina',

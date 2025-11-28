@@ -35,23 +35,25 @@ class KehadiranController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_eskul' => 'required|exists:eskuls,id_eskul',
-            'status'   => 'required|array',
+            'id_eskul' => 'required|integer',
+            'status' => 'required|array',
+            'tanggal' => 'nullable|date', // terima tanggal jika dikirim
         ]);
 
-        foreach ($request->status as $id_siswa => $status) {
+        // gunakan tanggal yang diberikan atau default ke hari ini (format Y-m-d)
+        $tanggal = $request->input('tanggal', date('Y-m-d'));
 
+        foreach ($request->status as $id_siswa => $status) {
             Kehadiran::create([
-                'id_siswa'  => $id_siswa,
-                'id_eskul'  => $request->id_eskul,
-                'tanggal'   => now()->format('Y-m-d'),
-                'status'    => $status,
-                'poin'      => $status === 'Alfa' ? -5 : 0,
+                'id_siswa' => $id_siswa,
+                'id_eskul' => $request->id_eskul,
+                'status' => $status,
+                'poin' => 100,
+                'tanggal' => $tanggal,
             ]);
         }
 
-        return redirect()->route('kehadiran.index')
-            ->with('success', 'Absensi berhasil disimpan.');
+        return redirect()->route('kehadiran.index')->with('success', 'Absensi berhasil disimpan.');
     }
 
     /**

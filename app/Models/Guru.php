@@ -3,10 +3,17 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
-class Guru extends Model{
+class Guru extends Model
+{
     protected $table = 'gurus';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $primaryKey = 'id_guru';
-    protected $fillable = ['id_user','nama_guru','jabatan'];
+    protected $fillable = [
+        'id_user',
+        'nama_guru',
+        'jabatan'
+    ];
 
     public function user(){
         return $this->belongsTo(User::class, 'id_user', 'id_user');

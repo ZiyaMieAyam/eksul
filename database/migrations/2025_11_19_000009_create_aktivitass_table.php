@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('aktivitass', function (Blueprint $table) {
-            $table->id('id_aktivitas')->unique();
-            $table->foreignId('id_eskul')->constrained('eskuls','id_eskul');
-            $table->foreignId('id_pembina')->constrained('pembinas','id_pembina');
+            $table->id('id_aktivitas');
+            $table->unsignedBigInteger('id_eskul');
+            $table->unsignedBigInteger('id_pembina');
             $table->string('jenis_aktivitas', 50);
             $table->string('tempat');
             $table->time('jam');

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Eskul extends Model
 {
     protected $table = 'eskuls';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $primaryKey = 'id_eskul';
 
     protected $fillable = [
@@ -31,13 +33,6 @@ class Eskul extends Model
         return $this->hasMany(Pendaftaran::class, 'id_eskul', 'id_eskul');
     }
 
-    public function prestasi()
-    {
-        return $this->hasMany(Prestasi::class, 'id_eskul', 'id_eskul');
-    }
 
-    public function kehadiran()
-    {
-        return $this->hasMany(Kehadiran::class, 'id_eskul', 'id_eskul');
-    }
+    
 }

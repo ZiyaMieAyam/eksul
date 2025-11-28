@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('eskuls', function (Blueprint $table) {
-            $table->id('id_eskul')->unique();
-            $table->foreignId('id_pembina')->constrained('pembinas', 'id_pembina');
+            $table->id('id_eskul');
+            $table->unsignedBigInteger('id_pembina');
             $table->string('nama_eskul', 50);
-            $table->string('jadwal_eskul', 50); // atau 100 jika ingin lebih longgar
+            $table->string('jadwal_eskul', 50);
             $table->text('materi');
             $table->timestamps();
         });

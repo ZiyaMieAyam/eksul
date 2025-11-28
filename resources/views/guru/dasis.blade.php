@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Data Siswa')
-
 @section('content')
 <h2>Data Siswa</h2>
 <a href="{{ route('guru.tamsis') }}" class="btn btn-primary mb-2">Tambah Siswa</a>
@@ -21,7 +19,8 @@
         <tr>
             <td>{{ $i + 1 }}</td>
             <td>{{ optional($siswa->user)->username ?? '-' }}</td>
-            <td>{{ $siswa->nama_siswa }}</td>
+            <td>{{ $siswa->nama_siswa }}</td>.
+            <td>{{ $siswa->kelas }}</td>
             <td>
                 @php
                     $accepted = $siswa->pendaftarans->where('status','Diterima')->first();

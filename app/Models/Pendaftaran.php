@@ -9,6 +9,7 @@ class Pendaftaran extends Model
     protected $table = 'pendaftarans';
     protected $primaryKey = 'id_pendaftaran';
     protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = [
         'id_siswa',

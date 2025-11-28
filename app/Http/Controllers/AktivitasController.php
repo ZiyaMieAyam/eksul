@@ -36,8 +36,8 @@ class AktivitasController extends Controller
         $validated = $request->validate([
             'id_pembina' => 'required|integer|exists:pembinas,id_pembina',
             'id_eskul' => 'required|integer|exists:eskuls,id_eskul',
-            'tanggal_aktivitas' => 'required|date', // Ubah dari 'tanggal' menjadi 'tanggal_aktivitas'
-            'jam' => 'nullable|date_format:H:i',
+            'tanggal_aktivitas' => 'required|date',
+            'jam' => 'nullable',
             'jenis_aktivitas' => 'required|string|max:100',
             'tempat' => 'nullable|string|max:100',
         ]);
@@ -75,7 +75,7 @@ class AktivitasController extends Controller
         $request->validate([
             'id_pembina' => 'required|integer',
             'id_eskul' => 'required|integer',
-            'tanggal' => 'required|date',
+            'tanggal_aktivitas' => 'required|date',
             'jam' => 'nullable|date_format:H:i',
             'jenis_aktivitas' => 'required|string|max:100',
             'tempat' => 'nullable|string|max:255',

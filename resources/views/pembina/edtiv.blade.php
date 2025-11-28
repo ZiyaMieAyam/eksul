@@ -64,7 +64,7 @@
             </select><br><br>
 
             <label for="tanggal_aktivitas">Tanggal</label><br>
-            <input type="date" name="tanggal_aktivitas" id="tanggal_aktivitas" value="{{ $aktivitas->tanggal_aktivitaszz }}" required><br><br>
+            <input type="date" name="tanggal_aktivitas" id="tanggal_aktivitas" value="{{ $aktivitas->tanggal_aktivitas }}" required><br><br>
 
             <label for="jam">Jam</label><br>
             <input type="time" name="jam" id="jam" value="{{ $aktivitas->jam }}"><br><br>

@@ -7,6 +7,8 @@ use App\Models\Prestasi;
 use App\Models\Siswa;
 use App\Models\Eskul;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Response;
 
 class PrestasiController extends Controller
 {
@@ -151,5 +153,47 @@ class PrestasiController extends Controller
         $prestasi->delete();
 
         return redirect()->route('prestasi.index')->with('success', 'Prestasi berhasil dihapus.');
+    }
+
+    /**
+     * Sajikan file bukti dari storage/app/public/{path} atau public/{path}
+     */
+    public function bukti($path)
+    {
+        $path = ltrim($path, '/');
+        $path = str_replace(['..', '\\'], '', $path);
+
+        if (empty($path)) {
+            abort(404);
+        }
+
+        $disk = Storage::disk('public');
+
+        // cek beberapa kemungkinan path yang sering dipakai
+        $candidates = [
+            $path,
+            'prestasi/'.$path,           // jika DB menyimpan hanya nama file
+            'bukti/'.$path,
+        ];
+
+        foreach ($candidates as $p) {
+            if ($disk->exists($p)) {
+                // tampilkan inline (PDF/image) atau fallback ke download
+                return $disk->response($p);
+            }
+        }
+
+        // fallback ke public/ (mis. jika file disimpan langsung di public/)
+        foreach ([
+
+            public_path('storage/'.$path),
+            public_path($path),
+        ] as $publicFull) {
+            if (file_exists($publicFull) && is_readable($publicFull)) {
+                return response()->file($publicFull);
+            }
+        }
+
+        abort(404);
     }
 }

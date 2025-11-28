@@ -17,12 +17,10 @@ class PembinaController extends Controller
     // dashboard pembina
     public function dashboard()
     {
-        // Total SEMUA siswa dari tabel siswas (tanpa filter apapun)
         $totalSiswa = Siswa::count();
-
-        // Statistik semua eskul dengan jumlah pendaftar
-        $eskulStats = Eskul::withCount('pendaftaran')->get();
-
+        $eskulStats = Eskul::withCount(['pendaftaran' => function($q) {
+            $q->where('status', 'Diterima');
+        }])->get();
         return view('dashboard.dashboardpembina', compact(
             'totalSiswa',
             'eskulStats'
@@ -53,7 +51,7 @@ class PembinaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_user' => 'integer|exists:userss,id_user', // fix here
+            'id_user' => 'integer|exists:userss,id_user',
             'nama_pembina' => 'required|string|max:50',
         ]);
 

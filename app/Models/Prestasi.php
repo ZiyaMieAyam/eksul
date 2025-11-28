@@ -9,6 +9,7 @@ class Prestasi extends Model
     protected $table = 'prestasis';
     protected $primaryKey = 'id_prestasi';
     protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = [
         'id_siswa',

@@ -1,4 +1,3 @@
-{{-- filepath: resources/views/siswa/prosis.blade.php --}}
 @extends('layouts.app')
 
 @section('title', 'Profil Siswa')
@@ -8,7 +7,7 @@
 <h2>Profil Saya</h2>
 
 <p>Nama: {{ $siswa->nama_siswa }}</p>
-<p>NIS: {{ $siswa->nis }}</p>
+<p>NIS: {{ optional($siswa->user)->username ?? '-' }}</p>
 <p>Kelas: {{ $siswa->kelas }}</p>
 
 <h3>Riwayat Pendaftaran</h3>

@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prestasis', function (Blueprint $table) {
-            $table->id('id_prestasi')->unique();
-            $table->foreignId('id_siswa')->constrained('siswas', 'id_siswa');
-            $table->foreignId('id_eskul')->constrained('eskuls', 'id_eskul');
+            $table->id('id_prestasi');
+            $table->unsignedBigInteger('id_siswa');
+            $table->unsignedBigInteger('id_eskul');
             $table->string('nama_prestasi', 100);
             $table->date('tanggal_diraih');
             $table->string('tingkat', 50);
             $table->string('bukti', 100);
-            $table->string('status', 50);
+            $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('peding');
             $table->timestamps();
         });
     }

@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Kehadiran extends Model
 {
     protected $table = 'kehadirans';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $primaryKey = 'id_kehadiran';
     protected $fillable = [
         'id_siswa',
         'id_eskul',
-        'tanggal',
+        'tanggal',  
         'status',
         'poin',
     ];  

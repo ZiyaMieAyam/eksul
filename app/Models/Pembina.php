@@ -8,11 +8,11 @@ class Pembina extends Model
 {
     protected $table = 'pembinas';
     protected $primaryKey = 'id_pembina';
+    public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
         'id_user',
-        'nip',
         'nama_pembina',
     ];
 

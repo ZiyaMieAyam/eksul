@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Data Pembina')
+@section('title', 'Tambah Pembina')
 
 @section('content')
-<h2>Tambah Data Pembina</h2>
+<h2>Tambah Pembina</h2>
 
 @if($errors->any())
     <div style="color:red; background:#ffebee; padding:10px; margin-bottom:10px;">
         <ul>
-            @foreach($errors->all() as $err)
-                <li>{{ $err }}</li>
+            @foreach($errors->all() as $e)
+                <li>{{ $e }}</li>
             @endforeach
         </ul>
     </div>
@@ -18,20 +18,17 @@
 <form action="{{ route('guru.storeim') }}" method="POST">
     @csrf
 
-    <label for="id_user">Pilih User (NIP/username)</label><br>
-    <select name="id_user" id="id_user" required>
-        <option value="">-- Pilih User Pembina --</option>
-        @foreach(\App\Models\User::where('role','pembina')->get() as $user)
-            <option value="{{ $user->id_user }}">{{ $user->username }}</option>
-        @endforeach
-    </select><br><br>
+    <label for="nip">NIP (username)</label><br>
+    <input type="text" name="nip" id="nip" value="{{ old('nip') }}" required><br><br>
+
+    <label for="password">Password (opsional)</label><br>
+    <input type="password" name="password" id="password"><br><br>
 
     <label for="nama_pembina">Nama Pembina</label><br>
-    <input type="text" name="nama_pembina" id="nama_pembina" required><br><br>
-
+    <input type="text" name="nama_pembina" id="nama_pembina" value="{{ old('nama_pembina') }}" required><br><br>
 
     <button type="submit">Simpan</button>
 </form>
- 
+
 <p><a href="{{ route('guru.dapim') }}">← Kembali</a></p>
 @endsection

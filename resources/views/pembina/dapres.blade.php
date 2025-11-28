@@ -22,6 +22,7 @@
             <th>Tanggal Diraih</th>
             <th>Tingkat</th>
             <th>Status</th>
+            <th>Bukti</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +35,15 @@
             <td>{{ $p->tanggal_diraih }}</td>
             <td>{{ $p->tingkat }}</td>
             <td>{{ $p->status }}</td>
+            <td>
+                @if(!empty($p->bukti))
+                    <a href="{{ route('prestasi.bukti', ['path' => $p->bukti]) }}" target="_blank" rel="noopener">Lihat</a>
+                    <br/>
+                    <img src="{{ route('prestasi.bukti', ['path' => $p->bukti]) }}" alt="bukti" style="max-width:120px; max-height:90px; margin-top:6px;">
+                @else
+                    -
+                @endif
+            </td>
         </tr>
         @empty
         <tr>

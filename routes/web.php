@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rekap-absensi', [GuruController::class, 'absensi'])->name('guru.datab');
     Route::get('/rekap-absensi/{id_eskul}/detail', [GuruController::class, 'absensiDetail'])->name('guru.absensi.detail');
     Route::get('/absensi-guru', [GuruController::class, 'absensi'])->name('guru.absensi');
+    Route::get('/absensi-guru/{id_eskul}/detail', [GuruController::class, 'absensiDetail'])->name('guru.absensi.detail');
     Route::get('/data-pembina-guru', [GuruController::class, 'dapim'])->name('guru.dapim');
     
     // GURU routes untuk siswa
@@ -58,4 +59,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/prestasi/{id}/pembina', [PembinaController::class, 'prestasiUpdate'])->name('pembina.prestasi.update');
     Route::get('/prestasi-verifikasi', [GuruController::class, 'prestasiVerifikasi'])->name('guru.prestasi.verifikasi');
     Route::put('/prestasi/{id}/verifikasi', [GuruController::class, 'prestasiUpdate'])->name('guru.prestasi.update');
+
+    Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::get('/pendaftaran/eskul/{id_eskul}', [PendaftaranController::class, 'showEskul'])->name('pendaftaran.eskul'); // detail pendaftaran untuk eskul
+    Route::put('/pendaftaran/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update'); // terima/tolak
+
+    // route untuk menyajikan file bukti (storage/app/public/{path})
+    Route::get('prestasi/bukti/{path}', [PrestasiController::class, 'bukti'])
+        ->where('path', '.*')
+        ->name('prestasi.bukti');
 });

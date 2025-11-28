@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kehadirans', function (Blueprint $table) {
-            $table->id('id_kehadiran')->unique();
-            $table->foreignId('id_siswa')->constrained('siswas', 'id_siswa');
-            $table->foreignId('id_eskul')->constrained('eskuls', 'id_eskul');
-            $table->integer('poin');
-            $table->date('tanggal');
+            $table->id('id_kehadiran');
+            $table->unsignedBigInteger('id_siswa');
+            $table->unsignedBigInteger('id_eskul');
+            $table->integer('poin')->default(100); // tambahkan default value
+            $table->date('tanggal_kehadiran'); // ubah dari 'tanggal' ke 'tanggal_kehadiran'
             $table->enum('status', ['Hadir', 'Sakit', 'Izin', 'Alfa']);
             $table->timestamps();
         });

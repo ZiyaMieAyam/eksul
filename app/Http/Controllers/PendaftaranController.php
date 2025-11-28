@@ -7,6 +7,7 @@ use App\Models\Pendaftaran;
 use App\Models\Siswa;
 use App\Models\Eskul;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PendaftaranController extends Controller
 {
@@ -15,25 +16,8 @@ class PendaftaranController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-
-        // Jika siswa, tampilkan riwayat pendaftaran miliknya
-        if ($user->role === 'siswa') {
-            $siswa = Siswa::where('id_user', $user->id_user)->first();
-            if (!$siswa) {
-                return redirect()->route('dashboard.siswa')->withErrors('Data siswa tidak ditemukan.');
-            }
-            $pendaftaran = Pendaftaran::with(['siswa', 'eskul'])
-                ->where('id_siswa', $siswa->id_siswa)
-                ->get();
-            return view('siswa.prosis', compact('siswa', 'pendaftaran'));
-        }
-
-        // Jika guru/pembina, tampilkan semua data pendaftaran
-        $pendaftarans = Pendaftaran::with(['siswa', 'eskul'])
-            ->orderBy('tanggal_daftar', 'desc')
-            ->get();
-        return view('pembina.dapen', compact('pendaftarans'));
+        $eskuls = Eskul::all();
+        return view('pembina.eskul_list', compact('eskuls'));
     }
 
     /**
@@ -122,5 +106,42 @@ class PendaftaranController extends Controller
         $pendaftaran->delete();
 
         return redirect()->route('pendaftaran.index')->with('success', 'Pendaftaran berhasil dihapus.');
+    }
+
+    // list eskul untuk dipilih
+    public function indexEskul()
+    {
+        $eskuls = Eskul::all();
+        return view('pembina.eskul_list', compact('eskuls'));
+    }
+
+    // detail pendaftar untuk satu eskul
+    public function showEskul($id_eskul)
+    {
+        $eskul = Eskul::findOrFail($id_eskul);
+        $pendaftarans = Pendaftaran::with('siswa')
+            ->where('id_eskul', $id_eskul)
+            ->orderBy('tanggal_daftar', 'asc')
+            ->get();
+
+        return view('pembina.dapen', compact('eskul', 'pendaftarans'));
+    }
+
+    // update status (Terima / Ditolak)
+    public function updateStatus(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:Diterima,Ditolak,Pending',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->status = $request->status;
+        $pendaftaran->save();
+
+        return back()->with('success', 'Status pendaftaran berhasil diubah menjadi: ' . $request->status);
     }
 }

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('pembinas', function (Blueprint $table) {
             $table->id('id_pembina')->unique();
             $table->unsignedBigInteger('id_user');
-            $table->foreign('id_user')->references('id_user')->on('userss');
             $table->string('nama_pembina', 50);
             $table->timestamps();
         });
