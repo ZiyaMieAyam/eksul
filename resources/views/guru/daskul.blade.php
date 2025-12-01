@@ -37,8 +37,9 @@
             <td>
                 <a href="{{ route('eskul.edit', $eskul->id_eskul) }}">Edit</a>
                 <form action="{{ route('eskul.destroy', $eskul->id_eskul) }}" method="POST" style="display:inline;">
-                    @csrf z@method('DELETE')
-                    <button onclick="return confirm('Hapus?')">Hapus</button>
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('Hapus?')">Hapus</button>
                 </form>
             </td>
         </tr>
