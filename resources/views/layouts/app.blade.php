@@ -1,59 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Mr Profesor')</title>
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    <title>@yield('title', 'Dashboard')</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-
 <body>
+    @include('partials.sidebarg')
 
-    {{-- NAVBAR: HANYA UNTUK SISWA --}}
-    @if(Auth::check() && Auth::user()->role === 'siswa')
-        @include('partials.navbarsiswa')
-    @endif
-
-    <div class="app-layout">
-        
-        {{-- SIDEBAR: HANYA UNTUK GURU & PEMBINA --}}
-        @auth
-            @if(Auth::user()->role === 'guru')
-                @include('partials.sidebarg')
-            @elseif(Auth::user()->role === 'pembina')
-                @include('partials.sidebarp')
-            @endif
-        @endauth
-
-        {{-- MAIN CONTENT --}}
-        <main class="main-content">
-            @if(session('success'))
-                <div class="alert success">{{ session('success') }}</div>
-            @endif
-
-            @if($errors->any())
-                <div class="alert error">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            @yield('content')
-        </main>
+    <div class="app-content" style="margin-left: var(--sidebar-collapsed-width); transition: margin-left 0.25s ease; padding: 24px;">
+        @yield('content')
     </div>
 
-    {{-- show success popup --}}
-    @if(session('success'))
-        <script>
-            (function() {
-                const msg = @json(session('success'));
-                setTimeout(() => { alert(msg); }, 150);
-            })();
-        </script>
-    @endif
-
+    <script>
+    (function(){
+        const aside = document.querySelector('aside.sidebar');
+        const app = document.querySelector('.app-content');
+        if(!aside || !app) return;
+        const root = document.documentElement;
+        const collapsed = getComputedStyle(root).getPropertyValue('--sidebar-collapsed-width').trim() || '5rem';
+        const expanded  = getComputedStyle(root).getPropertyValue('--sidebar-expanded-width').trim() || '16rem';
+        aside.addEventListener('mouseenter', ()=> app.style.marginLeft = expanded);
+        aside.addEventListener('mouseleave', ()=> app.style.marginLeft = collapsed);
+    })();
+    </script>
 </body>
 </html>
