@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // Gunakan middleware Authenticate bawaan Laravel (jangan custom)
-    })
+    })  
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })

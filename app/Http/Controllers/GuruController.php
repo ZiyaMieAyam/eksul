@@ -87,7 +87,7 @@ class GuruController extends Controller
         $eskul = Eskul::findOrFail($id_eskul);
 
         // ambil kehadiran untuk tanggal tertentu
-        $kehadirans = \App\Models\Kehadiran::with('siswa')
+        $kehadirans = Kehadiran::with('siswa')
             ->where('id_eskul', $id_eskul)
             ->where('tanggal', $tanggal)
             ->orderBy('id_siswa', 'asc')
